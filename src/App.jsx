@@ -26,6 +26,14 @@ const Dashboard = () => {
   const [themeColor, setThemeColor] = useState("teal.600");
   const [bgColor, setBgColor] = useState("gray.50");
 
+  // State for sidebar visibility
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  // Function to toggle sidebar visibility
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   return (
     <Flex minH="100vh" flexDir={{ base: "column", md: "row" }} bg={bgColor}>
       {/* Sidebar */}
@@ -34,7 +42,7 @@ const Dashboard = () => {
         bg={themeColor}
         color="white"
         p={4}
-        display={{ base: isMobile ? "none" : "block", md: "block" }}
+        display={isSidebarOpen ? "block" : { base: "none", md: "block" }} // Toggle sidebar visibility
       >
         <VStack spacing={4} align="stretch">
           <Text fontSize="2xl" fontWeight="bold">Health Tracker</Text>
@@ -46,7 +54,7 @@ const Dashboard = () => {
           <VStack mt={8} spacing={2} align="start">
             <Text>Choose Theme Color:</Text>
             <HStack spacing={2}>
-              {["teal.600", "blue.600", "red.600"].map(color => ( // Removed orange and green
+              {["teal.600", "blue.600", "red.600"].map(color => (
                 <Button
                   key={color}
                   size="sm"
@@ -69,7 +77,7 @@ const Dashboard = () => {
           <VStack mt={4} spacing={2} align="start">
             <Text>Choose Background Color:</Text>
             <HStack spacing={2}>
-              {["gray.50", "blue.50", "orange.50"].map(bg => ( // Removed white and green
+              {["gray.50", "blue.50", "orange.50"].map(bg => (
                 <Button
                   key={bg}
                   size="sm"
@@ -98,7 +106,7 @@ const Dashboard = () => {
             aria-label="Menu"
             icon={<FiMenu />}
             size="lg"
-            onClick={() => console.log("Open Menu")}
+            onClick={toggleSidebar} // Toggle sidebar on button click
             mb={4}
           />
         )}
