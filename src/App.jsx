@@ -23,7 +23,7 @@ const Dashboard = () => {
   const isMobile = useBreakpointValue({ base: true, md: false });
 
   // State for user preferences
-  const [themeColor, setThemeColor] = useState("teal.600");
+  const [themeColor, setThemeColor] = useState("pink.600");
   const [bgColor, setBgColor] = useState("gray.50");
 
   // State for sidebar visibility
@@ -163,9 +163,9 @@ const StatCard = ({ title, value, icon, colors }) => {
     labels: ["Completed", "Remaining"],
     datasets: [
       {
-        data: [70, 30], // Example data for completed and remaining
+        data: [70, 30], 
         backgroundColor: colors,
-        hoverBackgroundColor: colors.map(color => color + "CC"), // Slightly darker on hover
+        hoverBackgroundColor: colors.map(color => color + "CC"), 
       },
     ],
   };
@@ -181,7 +181,7 @@ const StatCard = ({ title, value, icon, colors }) => {
       <Text fontSize="xl" color="gray.600">
         {value}
       </Text>
-      <Box width="100px" height="100px">
+      <Box width="120px" height="100px">
         <Pie data={data} options={{ maintainAspectRatio: false }} />
       </Box>
     </VStack>
@@ -191,7 +191,7 @@ const StatCard = ({ title, value, icon, colors }) => {
 const ProgressCard = ({ title, value, goal }) => (
   <Box p={4} bg="white" borderRadius="md" shadow="md">
     <Text fontSize="lg" fontWeight="bold">{title} - {goal}</Text>
-    <Progress colorScheme="teal" size="sm" value={value} mt={2} />
+    <Progress colorScheme="pink" size="sm" value={value} mt={2} />
   </Box>
 );
 
