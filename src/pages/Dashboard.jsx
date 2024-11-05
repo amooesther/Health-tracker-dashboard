@@ -19,7 +19,7 @@ const Dashboard = () => {
   
   // State for user preferences
   const [themeColor, setThemeColor] = useState("teal.600");
-  const [bgColor, setBgColor] = useState("gray.50");
+  const [bgColor, setBgColor] = useState("green.50");
 
   return (
     <Flex minH="100vh" flexDir={{ base: "column", md: "row" }} bg={bgColor}>
@@ -75,7 +75,7 @@ const Dashboard = () => {
             <option value="white">White</option>
             <option value="blue.50">Light Blue</option>
             <option value="orange.50">Light Orange</option>
-            <option value="yellow.50">Light Yellow</option>
+            <option value="green.50">Light Green</option>
           </Select>
         </HStack>
 
