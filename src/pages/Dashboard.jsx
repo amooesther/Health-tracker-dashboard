@@ -13,10 +13,15 @@ import {
 import { FaHeartbeat, FaWalking, FaAppleAlt, FaBurn } from "react-icons/fa";
 import { FiMenu } from "react-icons/fi";
 import { useState } from "react";
+import { Pie } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+
+// Register ChartJS components
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const Dashboard = () => {
   const isMobile = useBreakpointValue({ base: true, md: false });
-  
+
   // State for user preferences
   const [themeColor, setThemeColor] = useState("teal.600");
   const [bgColor, setBgColor] = useState("green.50");
@@ -79,12 +84,12 @@ const Dashboard = () => {
           </Select>
         </HStack>
 
-        {/* Health Stats */}
-        <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={4}>
-          <StatCard title="Heart Rate" value="75 bpm" icon={<FaHeartbeat />} color="red.500" />
-          <StatCard title="Steps" value="8,200" icon={<FaWalking />} color="blue.500" />
-          <StatCard title="Calories" value="520 kcal" icon={<FaBurn />} color="orange.500" />
-          <StatCard title="Nutrition" value="1200 cal" icon={<FaAppleAlt />} color="green.500" />
+        {/* Health Stats with Pie Charts */}
+        <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={4} mb={8}>
+          <StatCard title="Heart Rate" value="75 bpm" icon={<FaHeartbeat />} colors={["#FF6384", "#FFB6C1", "#FFC0CB"]} />
+          <StatCard title="Steps" value="8,200" icon={<FaWalking />} colors={["#36A2EB", "#ADD8E6", "#87CEFA"]} />
+          <StatCard title="Calories" value="520 kcal" icon={<FaBurn />} colors={["#FFA500", "#FFD700", "#FFB347"]} />
+          <StatCard title="Nutrition" value="1200 cal" icon={<FaAppleAlt />} colors={["#4CAF50", "#8BC34A", "#A5D6A7"]} />
         </SimpleGrid>
 
         {/* Progress Tracking */}
@@ -116,26 +121,41 @@ const Dashboard = () => {
             <DietCard meal="Dinner" items="Salmon, Sweet Potatoes, Spinach" />
           </VStack>
         </Box>
-
-        {/* Weight Loss Goals */}
-        <Box mt={8}>
-          <Text fontSize="2xl" fontWeight="bold" mb={4}>Weight Loss Goals</Text>
-          <WeightLossGoal currentWeight={70} goalWeight={65} />
-        </Box>
       </Box>
     </Flex>
   );
 };
 
-const StatCard = ({ title, value, icon, color }) => (
-  <HStack p={4} borderRadius="md" bg="white" shadow="md" _hover={{ shadow: "lg" }} spacing={4} alignItems="center">
-    <Box color={color} fontSize="2xl">{icon}</Box>
-    <Box>
-      <Text fontSize="lg" fontWeight="bold">{title}</Text>
-      <Text fontSize="xl" color="gray.600">{value}</Text>
-    </Box>
-  </HStack>
-);
+const StatCard = ({ title, value, icon, colors }) => {
+  // Data for the pie chart
+  const data = {
+    labels: ["Completed", "Remaining"],
+    datasets: [
+      {
+        data: [70, 30], // Example data for completed and remaining
+        backgroundColor: colors,
+        hoverBackgroundColor: colors.map(color => color + "CC"), // Slightly darker on hover
+      },
+    ],
+  };
+
+  return (
+    <VStack p={4} borderRadius="md" bg="white" shadow="md" _hover={{ shadow: "lg" }} spacing={4} alignItems="center">
+      <Box color={colors[0]} fontSize="2xl">
+        {icon}
+      </Box>
+      <Text fontSize="lg" fontWeight="bold">
+        {title}
+      </Text>
+      <Text fontSize="xl" color="gray.600">
+        {value}
+      </Text>
+      <Box width="100px" height="100px">
+        <Pie data={data} options={{ maintainAspectRatio: false }} />
+      </Box>
+    </VStack>
+  );
+};
 
 const ProgressCard = ({ title, value, goal }) => (
   <Box p={4} bg="white" borderRadius="md" shadow="md">
@@ -157,18 +177,5 @@ const DietCard = ({ meal, items }) => (
     <Text color="gray.500">{items}</Text>
   </Box>
 );
-
-const WeightLossGoal = ({ currentWeight, goalWeight }) => {
-  const progress = ((currentWeight - goalWeight) / currentWeight * 100).toFixed(1);
-
-  return (
-    <Box p={4} bg="white" borderRadius="md" shadow="md">
-      <Text fontSize="lg" fontWeight="bold">Weight Loss Goal</Text>
-      <Text color="gray.500">Current: {currentWeight} kg</Text>
-      <Text color="gray.500">Goal: {goalWeight} kg</Text>
-      <Progress colorScheme="red" size="sm" value={progress} mt={2} />
-    </Box>
-  );
-};
 
 export default Dashboard;
