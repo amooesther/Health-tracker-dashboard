@@ -3,45 +3,82 @@ import {
   Flex,
   Text,
   VStack,
-  HStack,
   SimpleGrid,
   IconButton,
-  Progress,
   useBreakpointValue,
-  Select,
 } from "@chakra-ui/react";
 import { FaHeartbeat, FaWalking, FaAppleAlt, FaBurn } from "react-icons/fa";
 import { FiMenu } from "react-icons/fi";
-import { useState } from "react";
-import { Pie } from "react-chartjs-2";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { Line, Pie } from "react-chartjs-2";
+import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, Title, Tooltip, Legend, ArcElement, PointElement } from "chart.js";
 
 // Register ChartJS components
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(LineElement, CategoryScale, LinearScale, Title, Tooltip, Legend, ArcElement, PointElement);
 
 const Dashboard = () => {
   const isMobile = useBreakpointValue({ base: true, md: false });
 
-  // State for user preferences
-  const [themeColor, setThemeColor] = useState("teal.600");
-  const [bgColor, setBgColor] = useState("green.50");
+  // Example data for the graphs
+  const progressData = {
+    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    datasets: [
+      {
+        label: "Water Intake (cups)",
+        data: [7, 8, 7, 8, 7, 8, 7],
+        borderColor: "#36A2EB",
+        backgroundColor: "rgba(54, 162, 235, 0.2)",
+        fill: true,
+      },
+    ],
+  };
+
+  const activityData = {
+    labels: ["Running", "Walking", "Cycling", "Swimming", "Yoga", "Strength Training"],
+    datasets: [
+      {
+        label: "Activity Duration (mins)",
+        data: [30, 45, 60, 25, 50, 40],
+        borderColor: "#FF6384",
+        backgroundColor: "rgba(255, 99, 132, 0.2)",
+        fill: true,
+      },
+    ],
+  };
 
   return (
-    <Flex minH="100vh" flexDir={{ base: "column", md: "row" }} bg={bgColor}>
+    <Flex minH="100vh" flexDir={{ base: "column", md: "row" }}>
       {/* Sidebar */}
       <Box
         w={{ base: "full", md: "250px" }}
-        bg={themeColor}
+        bg="teal.600"
         color="white"
         p={4}
         display={{ base: isMobile ? "none" : "block", md: "block" }}
       >
-        <VStack spacing={4} align="stretch">
-          <Text fontSize="2xl" fontWeight="bold">Health Tracker</Text>
-          <Text fontSize="lg" mt={8}>Dashboard</Text>
-          <Text fontSize="lg">Profile</Text>
-          <Text fontSize="lg">Settings</Text>
-        </VStack>
+      <VStack spacing={4} align="stretch">
+  <Text fontSize="2xl" fontWeight="bold" _hover={{ color: "teal.400" }}>
+    Health Tracker
+  </Text>
+  <Text fontSize="lg" cursor="pointer" mt={8} _hover={{ color: "teal.400" }}>
+    Dashboard
+  </Text>
+  <Text fontSize="lg" cursor="pointer" _hover={{ color: "teal.400" }}>
+    Profile
+  </Text>
+  <Text fontSize="lg" cursor="pointer" _hover={{ color: "teal.400" }}>
+    Achievements
+  </Text>
+  <Text fontSize="lg" cursor="pointer"  _hover={{ color: "teal.400" }}>
+    Activity Log
+  </Text>
+  <Text fontSize="lg" cursor="pointer" _hover={{ color: "teal.400" }}>
+    Goals
+  </Text>
+  <Text fontSize="lg" cursor="pointer" _hover={{ color: "teal.400" }}>
+    Settings
+  </Text>
+</VStack>
+
       </Box>
 
       {/* Main Content */}
@@ -57,32 +94,9 @@ const Dashboard = () => {
           />
         )}
         
-        <Text fontSize="3xl" fontWeight="bold" mb={4} color={themeColor}>
+        <Text fontSize="3xl" fontWeight="bold" mb={4} color="teal.600">
           Dashboard
         </Text>
-
-        {/* Theme Selector */}
-        <HStack mb={4}>
-          <Text>Choose Theme Color:</Text>
-          <Select onChange={(e) => setThemeColor(e.target.value)} value={themeColor}>
-            <option value="teal.600">Teal</option>
-            <option value="blue.600">Blue</option>
-            <option value="orange.600">Orange</option>
-            <option value="red.600">Red</option>
-            <option value="green.600">Green</option>
-          </Select>
-        </HStack>
-        
-        <HStack mb={4}>
-          <Text>Choose Background Color:</Text>
-          <Select onChange={(e) => setBgColor(e.target.value)} value={bgColor}>
-            <option value="gray.50">Light Gray</option>
-            <option value="white">White</option>
-            <option value="blue.50">Light Blue</option>
-            <option value="orange.50">Light Orange</option>
-            <option value="green.50">Light Green</option>
-          </Select>
-        </HStack>
 
         {/* Health Stats with Pie Charts */}
         <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={4} mb={8}>
@@ -92,24 +106,20 @@ const Dashboard = () => {
           <StatCard title="Nutrition" value="1200 cal" icon={<FaAppleAlt />} colors={["#4CAF50", "#8BC34A", "#A5D6A7"]} />
         </SimpleGrid>
 
-        {/* Progress Tracking */}
+        {/* Progress Tracking Graph */}
         <Box mt={8}>
           <Text fontSize="2xl" fontWeight="bold" mb={4}>Progress Tracking</Text>
-          <VStack spacing={4} align="stretch">
-            <ProgressCard title="Water Intake" value={70} goal="8 cups" />
-            <ProgressCard title="Exercise" value={60} goal="30 mins" />
-            <ProgressCard title="Sleep" value={80} goal="8 hrs" />
-          </VStack>
+          <Box height="300px">
+            <Line data={progressData} options={{ responsive: true, plugins: { title: { display: true, text: "Water Intake Progress" } } }} />
+          </Box>
         </Box>
 
-        {/* Activity Overview */}
+        {/* Activity Overview Graph */}
         <Box mt={8}>
           <Text fontSize="2xl" fontWeight="bold" mb={4}>Activity Overview</Text>
-          <VStack spacing={4} align="stretch">
-            <ActivityCard activity="Morning Run" time="6:00 AM" />
-            <ActivityCard activity="Breakfast" time="8:00 AM" />
-            <ActivityCard activity="Yoga" time="10:00 AM" />
-          </VStack>
+          <Box height="300px">
+            <Line data={activityData} options={{ responsive: true, plugins: { title: { display: true, text: "Weekly Activity Overview" } } }} />
+          </Box>
         </Box>
 
         {/* Recommended Diet */}
@@ -127,49 +137,28 @@ const Dashboard = () => {
 };
 
 const StatCard = ({ title, value, icon, colors }) => {
-  // Data for the pie chart
   const data = {
     labels: ["Completed", "Remaining"],
     datasets: [
       {
-        data: [70, 30], // Example data for completed and remaining
+        data: [70, 30],
         backgroundColor: colors,
-        hoverBackgroundColor: colors.map(color => color + "CC"), // Slightly darker on hover
+        hoverBackgroundColor: colors.map(color => color + "CC"),
       },
     ],
   };
 
   return (
     <VStack p={4} borderRadius="md" bg="white" shadow="md" _hover={{ shadow: "lg" }} spacing={4} alignItems="center">
-      <Box color={colors[0]} fontSize="2xl">
-        {icon}
-      </Box>
-      <Text fontSize="lg" fontWeight="bold">
-        {title}
-      </Text>
-      <Text fontSize="xl" color="gray.600">
-        {value}
-      </Text>
+      <Box color={colors[0]} fontSize="2xl">{icon}</Box>
+      <Text fontSize="lg" fontWeight="bold">{title}</Text>
+      <Text fontSize="xl" color="gray.600">{value}</Text>
       <Box width="100px" height="100px">
         <Pie data={data} options={{ maintainAspectRatio: false }} />
       </Box>
     </VStack>
   );
 };
-
-const ProgressCard = ({ title, value, goal }) => (
-  <Box p={4} bg="white" borderRadius="md" shadow="md">
-    <Text fontSize="lg" fontWeight="bold">{title} - {goal}</Text>
-    <Progress colorScheme="teal" size="sm" value={value} mt={2} />
-  </Box>
-);
-
-const ActivityCard = ({ activity, time }) => (
-  <HStack p={4} bg="white" borderRadius="md" shadow="md" justify="space-between">
-    <Text fontWeight="bold">{activity}</Text>
-    <Text color="gray.500">{time}</Text>
-  </HStack>
-);
 
 const DietCard = ({ meal, items }) => (
   <Box p={4} bg="white" borderRadius="md" shadow="md">
